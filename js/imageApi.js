@@ -16,18 +16,3 @@ export function simulatedImageApiCall() {
     }, delay);
   });
 }
-export function simulatedImageApiCall2() {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      var images = [];
-      var files = FileReader.readdirSync(folder);
-      for (var i = 0; i < files.length; i++) {
-        var file = files[i];
-        if (file.endsWith(".png") || file.endsWith(".jpg")) {
-          images.push(folder + "/" + file);
-        }
-      }
-      resolve(images);
-    }, delay);
-  });
-}

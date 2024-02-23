@@ -41,6 +41,9 @@
     }
 
     &__figure {
+      height: 100%;
+      width: auto;
+
       &__image {
         object-fit: contain;
         width: auto;

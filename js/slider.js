@@ -53,8 +53,12 @@ function nextButtonHandler() {
 
 let images = null;
 async function initImages() {
-  images = await simulatedImageApiCall();
-  insertImages();
+  try {
+    images = await simulatedImageApiCall();
+    insertImages();
+  } catch (error) {
+    throw new Error("initImages", initImages);
+  }
 }
 initImages();
 
@@ -64,7 +68,13 @@ function initSlider() {
 initSlider();
 
 /**
- * called from initImages()
+ * @description
+ * This function inserts the images into the slider.
+ * It also creates the dots for the slider and sets the first image as focused.
+ * It also replaces the placeholder with the slider.
+ * It also sets the maxImageIndex.
+ * It also sets the event listeners for the images and the dots.
+ * @returns {void}
  */
 function insertImages() {
   maxImageIndex = images.length - 1;
@@ -73,26 +83,23 @@ function insertImages() {
     const img = document.createElement("img");
     const figure = document.createElement("figure");
     const figcaption = document.createElement("figcaption");
+
     figcaption.classList.add("slider__slides__figure__figcaption");
     figcaption.classList.add(`slider__slides__figure__figcaption-${index}`);
     figcaption.innerText = image.title;
 
     figure.classList.add("slider__slides__figure");
     figure.classList.add(`slider__slides__figure-${index}`);
-
     figure.addEventListener("mouseover", () => figureMouseOverHandler(index));
     figure.addEventListener("mouseleave", () => figureMouseLeaveHandler(index));
-
     figure.appendChild(img);
     figure.appendChild(figcaption);
 
     img.src = image.src;
     img.alt = image.title;
     img.id = image.id;
-
     img.classList.add("slider__slides__figure__image");
     img.classList.add(`slider__slides__figure__image-${index}`);
-
     img.addEventListener("click", () => imageClickHandler(index));
 
     if (index === 0) {
@@ -100,7 +107,6 @@ function insertImages() {
     }
 
     if (sliderContentContainer) {
-      // sliderContentContainer.appendChild(img);
       sliderContentContainer.appendChild(figure);
       createDot(index);
     } else {
@@ -157,6 +163,10 @@ function replacePlaceholderWithSlider() {
 }
 
 function scrollImageIntoView(nodeElement) {
+  if (!nodeElement) {
+    throw new Error("scrollImageIntoView", "nodeElement not found");
+  }
+
   const options = {
     behavior: "smooth",
     block: "center",
@@ -167,6 +177,11 @@ function scrollImageIntoView(nodeElement) {
 }
 
 function imageFocusHandler(nodeElement) {
+  // check if nodeElement is type of an image and not a figure
+  if (!nodeElement || !nodeElement.classList.contains("slider__slides__figure__image")) {
+    throw new Error("imageFocusHandler", "nodeElement is not an image");
+  }
+
   const allImages = sliderContentContainer.querySelectorAll(".slider__slides__figure__image");
 
   for (let image of allImages) {
@@ -176,6 +191,10 @@ function imageFocusHandler(nodeElement) {
 }
 
 function dotsFocusHandler(index) {
+  if (index === null || index === undefined) {
+    throw new Error("dotsFocusHandler", "index not found");
+  }
+
   const allDots = sliderDotsContainer.querySelectorAll(".slider__controls__dots__dot");
 
   for (let dot of allDots) {
@@ -188,6 +207,19 @@ function dotsFocusHandler(index) {
 let startX = null;
 function sliderDragStartHandler($event) {
   startX = $event.clientX;
+}
+
+function sliderWheelHandler($event) {
+  const { deltaY } = $event;
+  const direction = deltaY > 0 ? "left" : "right";
+  const speed = 20;
+
+  if (direction === "right") {
+    scrollSlider("left", speed);
+  } else {
+    scrollSlider("right", speed);
+  }
+  calculateImagePostionInsideContainer();
 }
 
 let lastClientX = null;
@@ -205,9 +237,15 @@ function slidesContentContainerDragHandler($event) {
 function scrollSlider(direction, speed = 1.5) {
   if (direction === "right") {
     sliderContentContainer.scrollLeft += speed;
-  } else {
-    sliderContentContainer.scrollLeft -= speed;
+    return;
   }
+
+  if (direction === "left") {
+    sliderContentContainer.scrollLeft -= speed;
+    return;
+  }
+
+  throw new Error("scrollSlider", "direction not found");
 }
 
 function getSliderMiddlePoint() {
@@ -215,13 +253,17 @@ function getSliderMiddlePoint() {
   return { x: width / 2, y: height / 2 };
 }
 
-function getMiddlOfTarget(target) {
-  const { width, height } = target.getBoundingClientRect();
-  return { x: width / 2, y: height / 2 };
-}
-
 let closestImage = null;
 let calculateImagePostionTimeout = null;
+
+/**
+ * @description
+ * This function calculates the closest image to the middle of the slider.
+ * It uses the middle point of the slider and the middle point of each image to calculate the distance.
+ * The image with the smallest distance to the middle point of the slider is the closest image.
+ * It also sets the focused dot.
+ *
+ */
 function calculateImagePostionInsideContainer() {
   const middle = getSliderMiddlePoint().x;
   const allImages = sliderContentContainer.querySelectorAll(".slider__slides__figure__image");
@@ -242,17 +284,14 @@ function calculateImagePostionInsideContainer() {
   });
 
   if (sliderContentContainer.scrollLeft === 0) {
-    // If at the start, select the first image
     closestImage = allImages[0];
   } else if (
     sliderContentContainer.scrollLeft + sliderContentContainer.offsetWidth >=
     sliderContentContainer.scrollWidth
   ) {
-    // If at the end, select the last image
     closestImage = allImages[allImages.length - 1];
   }
 
-  // get index of the closest image
   const index = [...allImages].indexOf(closestImage);
   dotsFocusHandler(index);
 
@@ -261,15 +300,18 @@ function calculateImagePostionInsideContainer() {
   }, 300);
 }
 
-function sliderWheelHandler($event) {
-  const { deltaY } = $event;
-  const direction = deltaY > 0 ? "left" : "right";
-  const speed = 20;
-
-  if (direction === "right") {
-    scrollSlider("left", speed);
-  } else {
-    scrollSlider("right", speed);
-  }
-  calculateImagePostionInsideContainer();
+/**
+ * @description
+ * This function removes all event listeners from the slider.
+ * It is used to clean up the event listeners when the slider is removed from the DOM.
+ */
+function removeAllEventListeners() {
+  prevButton.removeEventListener("click", prevButtonHandler);
+  nextButton.removeEventListener("click", nextButtonHandler);
+  window.removeEventListener("resize", sliderHeightHandler);
+  sliderContentContainer.removeEventListener("wheel", sliderWheelHandler);
+  sliderContentContainer.removeEventListener("dragstart", sliderDragStartHandler);
+  sliderContentContainer.removeEventListener("drag", slidesContentContainerDragHandler);
+  sliderContentContainer.removeEventListener("touchmove", slidesContentContainerDragHandler);
+  sliderContentContainer.removeEventListener("scroll", sliderScrollHandler);
 }

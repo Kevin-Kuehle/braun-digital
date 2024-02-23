@@ -110,6 +110,11 @@ h1 {
 .slider-placeholder__slides::-webkit-scrollbar {
   display: none;
 }
+.slider__slides__figure,
+.slider-placeholder__slides__figure {
+  height: 100%;
+  width: auto;
+}
 .slider__slides__figure__image,
 .slider-placeholder__slides__figure__image {
   -o-object-fit: contain;
