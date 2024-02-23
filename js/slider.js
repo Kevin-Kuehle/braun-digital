@@ -40,20 +40,19 @@ function prevButtonHandler() {
   const posibleNextImageIndex = currentImageIndex - 1 >= 0 ? currentImageIndex - 1 : maxImageIndex;
   currentImageIndex = posibleNextImageIndex;
 
-  const imgChild = sliderContentContainer.querySelectorAll(".slider__slides__image")[posibleNextImageIndex];
+  const imgChild = sliderContentContainer.querySelectorAll(".slider__slides__figure__image")[posibleNextImageIndex];
   scrollImageIntoView(imgChild);
 }
 function nextButtonHandler() {
   const posibleNextImageIndex = currentImageIndex + 1 <= maxImageIndex ? currentImageIndex + 1 : 0;
   currentImageIndex = posibleNextImageIndex;
 
-  const imgChild = sliderContentContainer.querySelectorAll(".slider__slides__image")[posibleNextImageIndex];
+  const imgChild = sliderContentContainer.querySelectorAll(".slider__slides__figure__image")[posibleNextImageIndex];
   scrollImageIntoView(imgChild);
 }
 
 let images = null;
 async function initImages() {
-  console.log(`devlog: initImages() called`);
   images = await simulatedImageApiCall();
   insertImages();
 }
@@ -72,20 +71,37 @@ function insertImages() {
 
   for (let [index, image] of images.entries()) {
     const img = document.createElement("img");
+    const figure = document.createElement("figure");
+    const figcaption = document.createElement("figcaption");
+    figcaption.classList.add("slider__slides__figure__figcaption");
+    figcaption.classList.add(`slider__slides__figure__figcaption-${index}`);
+    figcaption.innerText = image.title;
+
+    figure.classList.add("slider__slides__figure");
+    figure.classList.add(`slider__slides__figure-${index}`);
+
+    figure.addEventListener("mouseover", () => figureMouseOverHandler(index));
+    figure.addEventListener("mouseleave", () => figureMouseLeaveHandler(index));
+
+    figure.appendChild(img);
+    figure.appendChild(figcaption);
+
     img.src = image.src;
     img.alt = image.title;
     img.id = image.id;
-    img.classList.add("slider__slides__image");
-    img.classList.add(`slider__slides__image-${index}`);
+
+    img.classList.add("slider__slides__figure__image");
+    img.classList.add(`slider__slides__figure__image-${index}`);
 
     img.addEventListener("click", () => imageClickHandler(index));
 
     if (index === 0) {
-      img.classList.add("slider__slides__image--focused");
+      img.classList.add("slider__slides__figure__image--focused");
     }
 
     if (sliderContentContainer) {
-      sliderContentContainer.appendChild(img);
+      // sliderContentContainer.appendChild(img);
+      sliderContentContainer.appendChild(figure);
       createDot(index);
     } else {
       throw new Error("sliderContentContainer not found");
@@ -94,8 +110,19 @@ function insertImages() {
   replacePlaceholderWithSlider();
 }
 
+function figureMouseOverHandler(index) {
+  document
+    .querySelector(`.slider__slides__figure__figcaption-${index}`)
+    .classList.add("slider__slides__figure__figcaption--focused");
+}
+function figureMouseLeaveHandler(index) {
+  document
+    .querySelector(`.slider__slides__figure__figcaption-${index}`)
+    .classList.remove("slider__slides__figure__figcaption--focused");
+}
+
 function imageClickHandler(index) {
-  const imgChild = sliderContentContainer.querySelectorAll(".slider__slides__image")[index];
+  const imgChild = sliderContentContainer.querySelectorAll(".slider__slides__figure__image")[index];
   dotsFocusHandler(index);
   scrollImageIntoView(imgChild);
 }
@@ -120,7 +147,7 @@ function createDot(index) {
 }
 
 function dotClickHandler(index) {
-  const imgChild = sliderContentContainer.querySelectorAll(".slider__slides__image")[index];
+  const imgChild = sliderContentContainer.querySelectorAll(".slider__slides__figure__image")[index];
   scrollImageIntoView(imgChild);
 }
 
@@ -140,12 +167,12 @@ function scrollImageIntoView(nodeElement) {
 }
 
 function imageFocusHandler(nodeElement) {
-  const allImages = sliderContentContainer.querySelectorAll(".slider__slides__image");
+  const allImages = sliderContentContainer.querySelectorAll(".slider__slides__figure__image");
 
   for (let image of allImages) {
-    image.classList.remove("slider__slides__image--focused");
+    image.classList.remove("slider__slides__figure__image--focused");
   }
-  nodeElement.classList.add("slider__slides__image--focused");
+  nodeElement.classList.add("slider__slides__figure__image--focused");
 }
 
 function dotsFocusHandler(index) {
@@ -165,13 +192,9 @@ function sliderDragStartHandler($event) {
 
 let lastClientX = null;
 function slidesContentContainerDragHandler($event) {
-  const { y, x, target, clientX } = $event;
-  const { width, height } = target.getBoundingClientRect();
-  const middl = getSliderMiddlePoint();
-  const middlImg = getMiddlOfTarget(target);
+  const { clientX } = $event;
   const direction = clientX > lastClientX ? "left" : "right";
 
-  // scroll slider left or right only of the user is dragging the slider
   if (Math.abs(clientX - startX) > 10) {
     scrollSlider(direction);
   }
@@ -201,7 +224,7 @@ let closestImage = null;
 let calculateImagePostionTimeout = null;
 function calculateImagePostionInsideContainer() {
   const middle = getSliderMiddlePoint().x;
-  const allImages = sliderContentContainer.querySelectorAll(".slider__slides__image");
+  const allImages = sliderContentContainer.querySelectorAll(".slider__slides__figure__image");
   if (calculateImagePostionTimeout) clearTimeout(calculateImagePostionTimeout);
   let smallestDistance = Infinity;
 
