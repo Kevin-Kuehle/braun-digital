@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" src="./js/main.js" defer></script>
+    <link rel="stylesheet" href="./scss/style.css" />
+    <title>Slider</title>
+  </head>
+  <body>
+    <main class="contentGrid">
+      <h1 class="content text-center">Slider Example for 🍪</h1>
+      <div class="slider__wrapper content flex justify-content-center">
+        <div id="slider" class="slider hidden">
+          <div class="slider__header"></div>
+          <div draggable="true" class="slider__slides"></div>
+          <div class="slider__controls">
+            <button class="slider__prev">Prev</button>
+            <div class="slider__controls__dots"></div>
+            <button class="slider__next">Next</button>
+          </div>
+        </div>
+        <!--  -->
+        <div id="sliderPlaceholder" class="slider-placeholder">
+          <div class="slider__header"></div>
+          <div class="slider__slides">
+            <div class="image_placeholder skeleton-background-effect"></div>
+            <div class="image_placeholder skeleton-background-effect"></div>
+          </div>
+          <div class="slider__controls">
+            <button class="slider__prev skeleton-button skeleton-background-effect"></button>
+            <div class="slider__controls__dots flex align-items-center">
+              <span class="slider-placeholder-dot skeleton-background-effect"></span>
+              <span class="slider-placeholder-dot skeleton-background-effect"></span>
+              <span class="slider-placeholder-dot skeleton-background-effect"></span>
+            </div>
+            <button class="slider__next skeleton-button skeleton-background-effect"></button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

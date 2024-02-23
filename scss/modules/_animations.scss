@@ -1,0 +1,20 @@
+.skeleton-button {
+  height: 36px;
+  width: 63px;
+}
+
+.skeleton-background-effect {
+  background: linear-gradient(45deg, #f0f0f0 25%, #d3d3d3 50%, #f0f0f0 75%);
+  background-size: 400% 100%;
+  animation: skeletonBackgroundEffect 1.5s infinite linear;
+  border: none;
+}
+
+@keyframes skeletonBackgroundEffect {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}

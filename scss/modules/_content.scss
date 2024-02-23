@@ -1,0 +1,43 @@
+.contentGrid {
+  display: grid;
+  grid-template-columns:
+    [fullWidth-start] 1fr [content-start] min(100%, var(--max-content-width))
+    [content-end] 1fr [fullWidth-end];
+}
+
+.content {
+  grid-area: content;
+  grid-row: span 1;
+
+  @media (width <= 1200px) {
+    padding-inline: var(--mobile-spacing);
+  }
+}
+
+.full-width {
+  grid-area: fullWidth;
+  grid-column: page-start / page-end;
+  grid-row: span 1;
+}
+
+.flex {
+  display: flex;
+  flex-flow: row wrap;
+  width: 100%;
+}
+
+.place-center {
+  place-content: center;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.align-items-center {
+  align-items: center;
+}

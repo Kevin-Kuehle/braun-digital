@@ -1,0 +1,214 @@
+:root {
+  --page-background: #383838;
+  --font-color: #d1d1d1;
+  --max-content-width: 1200px;
+  --mobile-spacing: 20px;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  background-color: var(--page-background);
+  color: var(--font-color);
+}
+
+h1 {
+  margin-block: 1rem;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: [fullWidth-start] 1fr [content-start] min(100%, var(--max-content-width)) [content-end] 1fr [fullWidth-end];
+}
+
+.content {
+  grid-area: content;
+  grid-row: span 1;
+}
+@media (width <= 1200px) {
+  .content {
+    padding-inline: var(--mobile-spacing);
+  }
+}
+
+.full-width {
+  grid-area: fullWidth;
+  grid-column: page-start/page-end;
+  grid-row: span 1;
+}
+
+.flex {
+  display: flex;
+  flex-flow: row wrap;
+  width: 100%;
+}
+
+.place-center {
+  place-content: center;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+:root {
+  --slide-space: 20px;
+  --slider-height: 300px;
+  --slide-max-width-screen: 600px;
+  --slide-max-width-mobile: 500px;
+}
+
+.slider,
+.slider-placeholder {
+  width: 100%;
+  height: calc((100dvw - var(--slide-space)) / 1.7777777778);
+  max-width: var(--slide-max-width-screen);
+}
+@media (width <= 1000px) {
+  .slider,
+  .slider-placeholder {
+    max-width: var(--slide-max-width-mobile);
+  }
+}
+.slider.hidden,
+.slider-placeholder.hidden {
+  display: none;
+}
+.slider__header,
+.slider-placeholder__header {
+  text-align: center;
+}
+.slider__slides,
+.slider-placeholder__slides {
+  display: flex;
+  justify-content: flex-start;
+  height: var(--slider-height);
+  border: 2px solid grey;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  gap: var(--slide-space);
+  max-height: var(--slider-height);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.slider__slides::-webkit-scrollbar,
+.slider-placeholder__slides::-webkit-scrollbar {
+  display: none;
+}
+.slider__slides__image,
+.slider-placeholder__slides__image {
+  -o-object-fit: contain;
+     object-fit: contain;
+  width: auto;
+  transition: all 0.5s ease-in-out;
+  filter: grayscale(100) brightness(0.2) contrast(1.2);
+}
+.slider__slides__image--focused,
+.slider-placeholder__slides__image--focused {
+  filter: grayscale(0) brightness(1) contrast(1);
+}
+.slider__controls,
+.slider-placeholder__controls {
+  margin-top: 2rem;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+.slider__controls .slider__prev,
+.slider__controls .slider__next,
+.slider-placeholder__controls .slider__prev,
+.slider-placeholder__controls .slider__next {
+  padding-inline: 1rem;
+}
+.slider__controls__dots,
+.slider-placeholder__controls__dots {
+  font-size: 2rem;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 2px;
+  width: auto;
+}
+.slider__controls__dots__dot,
+.slider-placeholder__controls__dots__dot {
+  color: #000;
+}
+.slider__controls__dots__dot:hover,
+.slider-placeholder__controls__dots__dot:hover {
+  cursor: pointer;
+}
+.slider__controls__dots__dot--focused,
+.slider-placeholder__controls__dots__dot--focused {
+  color: red;
+}
+.slider-placeholder,
+.slider-placeholder-placeholder {
+  width: 100%;
+  max-width: var(--slide-max-width-screen);
+}
+@media (width <= 1000px) {
+  .slider-placeholder,
+  .slider-placeholder-placeholder {
+    max-width: var(--slide-max-width-mobile);
+  }
+}
+.slider-placeholder .slider__slides,
+.slider-placeholder-placeholder .slider__slides {
+  height: calc((100dvw - var(--slide-space)) / 1.7777777778);
+}
+
+.dod:hover {
+  cursor: pointer;
+}
+.dod--active {
+  color: red;
+}
+
+.slider-placeholder-dot {
+  height: 7px;
+  width: 7px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.image_placeholder {
+  flex: 1 1 auto;
+  aspect-ratio: 16/9;
+}
+
+.skeleton-button {
+  height: 36px;
+  width: 63px;
+}
+
+.skeleton-background-effect {
+  background: linear-gradient(45deg, #f0f0f0 25%, #d3d3d3 50%, #f0f0f0 75%);
+  background-size: 400% 100%;
+  animation: skeletonBackgroundEffect 1.5s infinite linear;
+  border: none;
+}
+
+@keyframes skeletonBackgroundEffect {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}/*# sourceMappingURL=style.css.map */

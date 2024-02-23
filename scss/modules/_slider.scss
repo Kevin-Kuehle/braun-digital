@@ -1,0 +1,122 @@
+:root {
+  --slide-space: 20px;
+  --slider-height: 300px;
+  --slide-max-width-screen: 600px;
+  --slide-max-width-mobile: 500px;
+}
+
+.slider,
+.slider-placeholder {
+  width: 100%;
+  height: calc((100dvw - var(--slide-space)) / 1.777777777777778);
+  max-width: var(--slide-max-width-screen);
+  @media (width <= 1000px) {
+    max-width: var(--slide-max-width-mobile);
+  }
+
+  &.hidden {
+    display: none;
+  }
+
+  &__header {
+    text-align: center;
+  }
+
+  &__slides {
+    display: flex;
+    justify-content: flex-start;
+    height: var(--slider-height);
+    border: 2px solid grey;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    gap: var(--slide-space);
+    max-height: var(--slider-height);
+
+    //remove scrollbar
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &__image {
+      object-fit: contain;
+      width: auto;
+      transition: all 0.5s ease-in-out;
+      filter: grayscale(100) brightness(0.2) contrast(1.2);
+
+      &--focused {
+        filter: grayscale(0) brightness(1) contrast(1);
+      }
+    }
+  }
+
+  &__controls {
+    margin-top: 2rem;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+
+    .slider__prev,
+    .slider__next {
+      padding-inline: 1rem;
+    }
+
+    &__dots {
+      font-size: 2rem;
+      display: flex;
+      flex-flow: row nowrap;
+      gap: 2px;
+      width: auto;
+
+      &__dot {
+        color: #000;
+        &:hover {
+          cursor: pointer;
+        }
+
+        &--focused {
+          color: red;
+        }
+      }
+    }
+  }
+
+  &-placeholder {
+    width: 100%;
+    max-width: var(--slide-max-width-screen);
+
+    @media (width <= 1000px) {
+      max-width: var(--slide-max-width-mobile);
+    }
+
+    .slider__slides {
+      height: calc((100dvw - var(--slide-space)) / 1.777777777777778);
+    }
+  }
+}
+
+.dod {
+  &:hover {
+    cursor: pointer;
+  }
+
+  &--active {
+    color: red;
+  }
+}
+
+.slider-placeholder-dot {
+  height: 7px;
+  width: 7px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.image_placeholder {
+  flex: 1 1 auto;
+  aspect-ratio: 16 / 9;
+}
