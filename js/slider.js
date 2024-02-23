@@ -51,6 +51,10 @@ function nextButtonHandler() {
   scrollImageIntoView(imgChild);
 }
 
+function updateCurrentImageIndex(index) {
+  currentImageIndex = index;
+}
+
 let images = null;
 async function initImages() {
   try {
@@ -129,7 +133,7 @@ function figureMouseLeaveHandler(index) {
 
 function imageClickHandler(index) {
   const imgChild = sliderContentContainer.querySelectorAll(".slider__slides__figure__image")[index];
-  dotsFocusHandler(index);
+  updateCurrentImageIndex(index);
   scrollImageIntoView(imgChild);
 }
 
@@ -154,6 +158,7 @@ function createDot(index) {
 
 function dotClickHandler(index) {
   const imgChild = sliderContentContainer.querySelectorAll(".slider__slides__figure__image")[index];
+  updateCurrentImageIndex(index);
   scrollImageIntoView(imgChild);
 }
 
